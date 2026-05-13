@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESPRIT — Mes Tâches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --primary-light: #fee2e2;
+            --success: #059669;
+            --success-light: #d1fae5;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            --danger: #b91c1c;
+            --danger-light: #fee2e2;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            color: var(--gray-900);
+            line-height: 1.5;
+        }
+
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(220, 38, 38, 0.05);
+        }
+
+        .brand {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.2);
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .brand-sub {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .user-session {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .user-session::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1rem;
+            right: 1rem;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 0 0 3px 3px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.125rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+        }
+
+        .user-details h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .user-details p {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .session-info {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .session-info div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .nav-section {
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 0.75rem;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .nav a.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav a .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: 1400px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-content p {
+            color: var(--gray-500);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-insights {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+        }
+
+        /* Stats Cards */
+        .task-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        /* =============================================
+           SEARCH / FILTER / SORT TOOLBAR
+           ============================================= */
+        .search-toolbar {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .search-toolbar-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .search-toolbar-header h3 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-toolbar-body {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .search-toolbar-form {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto auto;
+            gap: 0.75rem;
+            align-items: end;
+        }
+
+        /* Search input group */
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input-icon {
+            position: absolute;
+            left: 1rem;
+            width: 18px;
+            height: 18px;
+            color: var(--gray-400);
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+        }
+
+        .search-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        /* Filter selects */
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .filter-select {
+            padding: 0.75rem 2.25rem 0.75rem 0.9rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.6rem center;
+            background-size: 14px;
+            min-width: 140px;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+        }
+
+        .filter-select option {
+            color: var(--gray-800);
+        }
+
+        /* Toolbar action buttons */
+        .toolbar-btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .toolbar-btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.2);
+        }
+
+        .toolbar-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(220, 38, 38, 0.3);
+        }
+
+        .toolbar-btn-ghost {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+        }
+
+        .toolbar-btn-ghost:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary-light);
+        }
+
+        /* Active filter tags */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-top: 1px dashed var(--gray-200);
+            background: #fff8f8;
+        }
+
+        .active-filter-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 30px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .active-filter-tag svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .results-count-bar {
+            padding: 0.6rem 1.5rem;
+            background: #fff8f8;
+            border-top: 1px solid var(--gray-100);
+            font-size: 0.78rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .results-count-bar strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Tasks Container */
+        .tasks-container {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .tasks-header {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tasks-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .task-grid {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Task Card */
+        .task-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .task-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -10px rgba(220, 38, 38, 0.1), 0 8px 20px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary-light);
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gray-300);
+        }
+
+        .task-card.high-priority::before {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+        }
+
+        .task-card.medium-priority::before {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+        }
+
+        .task-card.low-priority::before {
+            background: linear-gradient(90deg, #059669, #10b981);
+        }
+
+        .task-header {
+            padding: 1.5rem 1.5rem 1rem;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .task-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .task-status {
+            padding: 0.35rem 1rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .status-a_faire { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        .status-en_cours { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .status-terminee { background: #d1fae5; color: #065f46; border-color: #10b981; }
+        .status-en_retard { background: #fee2e2; color: #991b1b; border-color: #ef4444; }
+        .status-paused { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        .status-abandonnee { background: #f3f4f6; color: #4b5563; border-color: #9ca3af; }
+
+        .task-content {
+            padding: 0 1.5rem 1rem;
+        }
+
+        .task-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--gray-200);
+        }
+
+        .task-details {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .detail-item:last-child { border-bottom: none; }
+
+        .detail-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--gray-500);
+            flex-shrink: 0;
+        }
+
+        .detail-item strong {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-left: 0.25rem;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        .priority-high { background: #fee2e2; color: #991b1b; }
+        .priority-medium { background: #fef3c7; color: #92400e; }
+        .priority-low { background: #d1fae5; color: #065f46; }
+
+        .task-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .task-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            background: white;
+            border: 1px solid var(--gray-200);
+        }
+
+        .tag-cours { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+        .tag-examen { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        .tag-reunion { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+        .tag-personnel { background: #f3f4f6; color: #4b5563; border-color: #e5e7eb; }
+
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .task-actions { display: flex; gap: 0.5rem; }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid var(--gray-300);
+            background: white;
+            color: var(--gray-700);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .action-btn:hover { background: var(--gray-100); border-color: var(--gray-400); }
+        .action-btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
+        .action-btn.primary:hover { background: var(--primary-dark); }
+
+        .task-date {
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .task-card.archived {
+            background: #fafafa;
+            border-color: #e5e7eb;
+            opacity: 0.9;
+        }
+
+        .task-card.archived .task-header { background: #fafafa; }
+        .task-card.archived .task-title { color: #6b7280; }
+        .task-card.archived .task-details { background: white; }
+
+        .archived-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: #e5e7eb;
+            color: #4b5563;
+            margin-left: 0.5rem;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gray-200);
+            color: var(--gray-800);
+        }
+
+        .archived-title {
+            color: #6b7280;
+            border-bottom-color: #d1d5db;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-500);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            opacity: 0.2;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 2rem;
+        }
+
+        /* Modal */
+        #insightsModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 650px;
+            width: 90%;
+            max-height: 85%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-xl);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1.5rem 2rem;
+            border-radius: 24px 24px 0 0;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        #closeInsights {
+            position: absolute;
+            top: 1.5rem; right: 1.5rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        #closeInsights:hover { background: rgba(255,255,255,0.3); }
+
+        .modal-body { padding: 2rem; }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Charts */
+        .charts-section { margin: 2rem 0; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            min-height: 300px;
+            position: relative;
+        }
+
+        .chart-card h3 { margin: 0 0 1rem 0; font-size: 1rem; color: var(--gray-700); }
+        .chart-card canvas { max-height: 250px; width: 100% !important; height: auto !important; }
+
+        /* Prediction */
+        .task-prediction {
+            margin: 1rem 0 0.5rem;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+
+        .task-prediction:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-color: var(--primary-light);
+        }
+
+        .probability-container { display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .probability-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .probability-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .probability-icon { width: 16px; height: 16px; color: var(--primary); }
+
+        .probability-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+            background: white;
+            border: 1px solid var(--gray-200);
+        }
+
+        .probability-value.high  { color: #059669; background: #d1fae5; border-color: #10b981; }
+        .probability-value.medium{ color: #d97706; background: #fef3c7; border-color: #f59e0b; }
+        .probability-value.low   { color: #b91c1c; background: #fee2e2; border-color: #ef4444; }
+
+        .progress-bar-container { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .progress-bar-bg {
+            width: 100%; height: 8px;
+            background: var(--gray-200);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 30px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-bar-fill.high   { background: linear-gradient(90deg, #059669, #10b981); }
+        .progress-bar-fill.medium { background: linear-gradient(90deg, #d97706, #f59e0b); }
+        .progress-bar-fill.low    { background: linear-gradient(90deg, #b91c1c, #ef4444); }
+
+        .progress-markers {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0.25rem;
+            font-size: 0.6rem;
+            color: var(--gray-500);
+        }
+
+        .probability-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: white;
+            border: 1px solid var(--gray-200);
+            margin-top: 0.25rem;
+        }
+
+        .probability-status.high   { background: #f0fdf4; color: #059669; border-color: #86efac; }
+        .probability-status.medium { background: #fffbeb; color: #d97706; border-color: #fcd34d; }
+        .probability-status.low    { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+        .no-data-message {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            color: var(--gray-500);
+            font-size: 0.85rem;
+            font-style: italic;
+            background: var(--gray-50);
+            border-radius: 12px;
+            border: 1px dashed var(--gray-300);
+        }
+
+        @keyframes attentionPulse {
+            0%  { box-shadow: 0 0 0 0   rgba(185, 28, 28, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(185, 28, 28, 0); }
+            100%{ box-shadow: 0 0 0 0   rgba(185, 28, 28, 0); }
+        }
+
+        .probability-status.low { animation: attentionPulse 2s infinite; }
+
+        /* Notifications */
+        .dropdown {
+            position: fixed;
+            width: 600px;
+            max-width: 95vw;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -8px rgba(0,0,0,0.2);
+            border: 1px solid var(--gray-200);
+            z-index: 9999;
+            overflow: hidden;
+            animation: dropdown-slide 0.2s ease-out;
+        }
+
+        @keyframes dropdown-slide {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown.hidden { display: none; }
+
+        .dropdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            background: linear-gradient(135deg, #fafafa, white);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .dropdown-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        #notif-list {
+            list-style: none;
+            padding: 0; margin: 0;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        #notif-list li {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        #notif-list li.unread { background: #fff7f7; border-left: 4px solid var(--primary); }
+        #notif-list li.unread:hover { background: #ffeeee; }
+
+        .notif-action-btn {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 30px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            color: var(--gray-700);
+            border-color: var(--gray-300);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .notif-action-btn.finish { background: #e6f7e6; color: #2e7d32; border-color: #a5d6a7; }
+        .notif-action-btn.finish:hover { background: #2e7d32; color: white; }
+        .notif-action-btn.abandon { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+        .notif-action-btn.abandon:hover { background: #c62828; color: white; }
+
+        .new-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.15rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar { width: 240px; }
+            .main { margin-left: 240px; }
+            .search-toolbar-form { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .app-shell { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; padding: 1rem; }
+            .main { margin-left: 0; padding: 1rem; }
+            .task-stats { grid-template-columns: repeat(2, 1fr); }
+            .task-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .header-content h1 { font-size: 2rem; }
+            .search-toolbar-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-row">
+                <div class="brand-icon">ES</div>
+                <div>
+                    <div class="brand-title">ESPRIT</div>
+                    <div class="brand-sub">Assistant Étudiant</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-session">
+            <div class="user-info">
+                <div class="avatar">
+                    {{ app.user.nom|first }}{{ app.user.prenom|first }}
+                </div>
+                <div class="user-details">
+                    <h3>{{ app.user.nom }} {{ app.user.prenom }}</h3>
+                    <p>📚 {{ app.user.classe is not null ? app.user.classe.nom : 'Aucune classe' }}</p>
+                </div>
+            </div>
+            <div class="session-info">
+                <div><strong>Email :</strong> {{ app.user.email }}</div>
+                <div><strong>Rôle :</strong> {{ app.user.roles[0]|replace({'ROLE_': ''})|capitalize }}</div>
+            </div>
+            <div class="notifications">
+                <a href="#" id="notif-icon" class="notification-icon"> 🔔 <span id="notif-count" class="badge">0</span> </a>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Général</div>
+                <a href="{{ path('app_dashboard') }}">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7"/><path d="M9 22V12h6v10"/>
+                    </svg>
+                    Tableau de bord
+                </a>
+                <a href="{{ path('app_my_tasks') }}" class="active">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    Mes Tâches
+                </a>
+                <a href="#">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    Objectifs
+                </a>
+                <a href="{{ path('front_objectif_sante_index') }}">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    Santé
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Académique</div>
+                <a href="{{ path('app_classe_users',{'id': app.user.classe.id}) }}">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    Classes
+                </a>
+                <a href="{{ path('app_matiere_classe_by_classe', {'id': app.user.classe.id}) }}">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    Matières
+                </a>
+                <a href="#">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="7" width="18" height="13" rx="2"/>
+                        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    Salles
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Cours & Groupes</div>
+                <a href="#">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    Séances
+                </a>
+                <a href="#">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    Groupes
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Compte</div>
+                <a href="{{ path('app_profile') }}">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Profil
+                </a>
+                <a href="{{ path('app_logout') }}">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>
+                    </svg>
+                    Déconnexion
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <header class="header">
+            <div class="header-content">
+                <h1>Mes Tâches</h1>
+                <p>Gérez et suivez toutes vos tâches académiques</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button id="weatherBtn" class="btn btn-insights">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2v4M12 22v-4M4 12H2M22 12h-2"/>
+                    </svg>
+                    Conseil Météo IA
+                </button>
+                <a href="{{ path('app_task_add') }}" class="btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Nouvelle Tâche
+                </a>
+            </div>
+        </header>
+
+        {% set totalTasks = stats.counts.total %}
+        {% set completedTasks = stats.counts.completed %}
+        {% set abandonedTasks = stats.counts.abandoned %}
+        {% set inProgressTasks = stats.counts.inProgress %}
+        {% set pausedTasks = stats.counts.paused %}
+        {% set overdueTasks = stats.counts.overdue %}
+        {% set highPriorityTasks = stats.counts.highPriority %}
+
+        <div class="task-stats">
+            <div class="stat-card">
+                <div class="stat-value">{{ totalTasks }}</div>
+                <div class="stat-label">📋 Total des tâches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ inProgressTasks + pausedTasks + overdueTasks }}</div>
+                <div class="stat-label">⏳ En cours</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ completedTasks }}</div>
+                <div class="stat-label">✅ Terminées</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ highPriorityTasks }}</div>
+                <div class="stat-label">🔥 Haute priorité</div>
+            </div>
+        </div>
+
+
+
+        {# Charts section #}
+        <div class="charts-section">
+            <h2>Analyses visuelles</h2>
+            <div class="charts-grid" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="chart-card">
+                    <h3>📊 Répartition des tâches par statut</h3>
+                    <canvas id="statusChart" width="400" height="300"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>🎯 Répartition par priorité</h3>
+                    <canvas id="priorityChart" width="400" height="300"></canvas>
+                </div>
+                <div class="chart-card" style="grid-column: span 2;">
+                    <h3>📈 Progression sur 30 jours</h3>
+                    <canvas id="progressChart" width="800" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+                {# ============================================================
+           SEARCH / FILTER / SORT TOOLBAR
+           ============================================================ #}
+        <div class="search-toolbar">
+            <div class="search-toolbar-header">
+                <h3>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    Recherche & Filtres
+                </h3>
+            </div>
+
+            <div class="search-toolbar-body">
+                <form method="GET" action="{{ path('app_my_tasks') }}" class="search-toolbar-form" id="filterForm">
+
+                    {# Search by title #}
+                    <div class="search-input-group">
+                        <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input
+                            type="text"
+                            name="search"
+                            class="search-input"
+                            placeholder="Rechercher par titre..."
+                            value="{{ searchQuery|default('') }}"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    {# Filter by type #}
+                    <div class="filter-group">
+                        <label class="filter-label">Type</label>
+                        <select name="type" class="filter-select" onchange="this.form.submit()">
+                            <option value="">Tous les types</option>
+                            <option value="COURS"     {{ filterType == 'COURS'     ? 'selected' : '' }}>📖 Cours</option>
+                            <option value="EXAMEN"    {{ filterType == 'EXAMEN'    ? 'selected' : '' }}>📝 Examen</option>
+                            <option value="REUNION"   {{ filterType == 'REUNION'   ? 'selected' : '' }}>🤝 Réunion</option>
+                            <option value="PERSONNEL" {{ filterType == 'PERSONNEL' ? 'selected' : '' }}>👤 Personnel</option>
+                        </select>
+                    </div>
+
+                    {# Filter by priority #}
+                    <div class="filter-group">
+                        <label class="filter-label">Priorité</label>
+                        <select name="priorite" class="filter-select" onchange="this.form.submit()">
+                            <option value="">Toutes les priorités</option>
+                            <option value="ELEVEE"  {{ filterPriorite == 'ELEVEE'  ? 'selected' : '' }}>🔴 Haute</option>
+                            <option value="MOYENNE" {{ filterPriorite == 'MOYENNE' ? 'selected' : '' }}>🟡 Moyenne</option>
+                            <option value="FAIBLE"  {{ filterPriorite == 'FAIBLE'  ? 'selected' : '' }}>🟢 Faible</option>
+                        </select>
+                    </div>
+
+                    {# Sort by dateDebut #}
+                    <div class="filter-group">
+                        <label class="filter-label">Trier par date</label>
+                        <select name="sort" class="filter-select" onchange="this.form.submit()">
+                            <option value="desc" {{ sortOrder == 'desc' ? 'selected' : '' }}>⬇ Plus récent</option>
+                            <option value="asc"  {{ sortOrder == 'asc'  ? 'selected' : '' }}>⬆ Plus ancien</option>
+                        </select>
+                    </div>
+
+                    {# Buttons #}
+                    <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+                        <button type="submit" class="toolbar-btn toolbar-btn-primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            Rechercher
+                        </button>
+                        {% if searchQuery or filterType or filterPriorite or sortOrder != 'desc' %}
+                            <a href="{{ path('app_my_tasks') }}" class="toolbar-btn toolbar-btn-ghost">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M18 6 6 18M6 6l12 12"/>
+                                </svg>
+                                Réinitialiser
+                            </a>
+                        {% endif %}
+                    </div>
+
+                </form>
+            </div>
+
+            {# Active filter tags #}
+            {% if searchQuery or filterType or filterPriorite %}
+                <div class="active-filters">
+                    {% if searchQuery %}
+                        <span class="active-filter-tag">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            Titre : "{{ searchQuery }}"
+                        </span>
+                    {% endif %}
+                    {% if filterType %}
+                        <span class="active-filter-tag">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+                            Type : {{ filterType|capitalize }}
+                        </span>
+                    {% endif %}
+                    {% if filterPriorite %}
+                        <span class="active-filter-tag">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+                            Priorité : {{ filterPriorite|capitalize }}
+                        </span>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {# Results count #}
+            <div class="results-count-bar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <strong>{{ (activeTasks|default([]))|length + (archivedTasks|default([]))|length }}</strong>
+                tâche(s) affichée(s)
+                {% if searchQuery or filterType or filterPriorite %}
+                    sur {{ totalTasks }} au total
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tasks-container">
+            <div class="tasks-header">
+                <h2 class="tasks-title">Toutes les tâches ({{ totalTasks }})</h2>
+                <a href="#" id="btnInsights" class="btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12v-2a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5v2"/>
+                        <path d="M3 12h4l2 3 3-6 2 3 3-3 2 3 2-3"/>
+                        <path d="M3 12v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/>
+                    </svg>
+                    Analyse & Insights
+                </a>
+            </div>
+
+            <div class="task-grid">
+
+                {# Active tasks #}
+                {% if activeTasks is defined and activeTasks|length > 0 %}
+                    <h2 class="section-title">Tâches en cours ({{ activeTasks|length }})</h2>
+                    {% for task in activeTasks %}
+                        {% set priorityClass = task.priorite == 'ELEVEE' ? 'high' : (task.priorite == 'FAIBLE' ? 'low' : 'medium') %}
+                        <div class="task-card {{ priorityClass }}-priority">
+                            <div class="task-header">
+                                <h3 class="task-title">{{ task.titre|default('Sans titre') }}</h3>
+                                <span class="task-status status-{{ task.statut|lower|replace({'_': '-'}) }}">
+                                    {{ task.statut|replace({'_': ' '})|title }}
+                                </span>
+                            </div>
+
+                            <div class="task-content">
+                                {% if task.description %}
+                                    <div class="task-description">{{ task.description|slice(0, 100) }}{% if task.description|length > 100 %}...{% endif %}</div>
+                                {% endif %}
+
+                                <div class="task-details">
+                                    <div class="detail-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/>
+                                        </svg>
+                                        <span>Priorité:
+                                            <strong>{{ task.priorite|default('MOYENNE')|title }}</strong>
+                                            <span class="priority-badge priority-{{ task.priorite|default('MOYEN')|lower }}">{{ task.priorite|default('MOYEN') }}</span>
+                                        </span>
+                                    </div>
+                                    {% if task.dateDebut %}
+                                        <div class="detail-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                            </svg>
+                                            <span>Début: <strong>{{ task.dateDebut|date('d/m/Y') }}</strong></span>
+                                        </div>
+                                    {% endif %}
+                                    {% if task.dateEcheance %}
+                                        <div class="detail-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                            </svg>
+                                            <span>Échéance: <strong>{{ task.dateEcheance|date('d/m/Y') }}</strong></span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="task-prediction">
+                                    {% if task.prediction is not null %}
+                                        {% set probability = task.prediction * 100 %}
+                                        {% set probabilityColor = probability >= 70 ? 'high' : (probability >= 40 ? 'medium' : 'low') %}
+                                        <div class="probability-container">
+                                            <div class="probability-header">
+                                                <span class="probability-label">
+                                                    <svg class="probability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                                                    </svg>
+                                                    Probabilité de complétion
+                                                </span>
+                                                <span class="probability-value {{ probabilityColor }}">
+                                                    {{ probability|number_format(1, '.', ',') }}%
+                                                </span>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar-bg">
+                                                    <div class="progress-bar-fill {{ probabilityColor }}" style="width: {{ probability }}%"></div>
+                                                </div>
+                                                <div class="progress-markers">
+                                                    <span>0%</span><span>50%</span><span>100%</span>
+                                                </div>
+                                            </div>
+                                            <div class="probability-status {{ probabilityColor }}">
+                                                {% if probability >= 70 %}
+                                                    <span>✓</span> Bonnes chances de réussite
+                                                {% elseif probability >= 40 %}
+                                                    <span>⚠️</span> Risque modéré - Restez concentré
+                                                {% else %}
+                                                    <span>!</span> Nécessite votre attention immédiate
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="probability-container no-data">
+                                            <div class="no-data-message">
+                                                <span>📊</span>
+                                                Analyse en attente de données
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="task-tags">
+                                    <span class="task-tag tag-{{ task.type|default('personnel')|lower }}">
+                                        {{ task.type|default('Personnel')|upper }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="task-footer">
+                                <div class="task-actions">
+                                    <a href="{{ path('app_task_show', {'id': task.id}) }}" class="action-btn primary">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/>
+                                        </svg>
+                                        Détails
+                                    </a>
+                                    <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="action-btn">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                        Modifier
+                                    </a>
+                                </div>
+                                <span class="task-date">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    {{ (task.updatedAt ?? task.createdAt)|date('d/m/Y') }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {# Archived tasks #}
+                {% if archivedTasks is defined and archivedTasks|length > 0 %}
+                    <h2 class="section-title archived-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/>
+                        </svg>
+                        Tâches archivées ({{ archivedTasks|length }})
+                    </h2>
+
+                    {% for task in archivedTasks %}
+                        {% set priorityClass = task.priorite == 'ELEVEE' ? 'high' : (task.priorite == 'FAIBLE' ? 'low' : 'medium') %}
+                        <div class="task-card archived {{ priorityClass }}-priority">
+                            <div class="task-header">
+                                <h3 class="task-title">{{ task.titre|default('Sans titre') }}</h3>
+                                <span class="task-status status-{{ task.statut|lower|replace({'_': '-'}) }}">
+                                    {% if task.statut == 'TERMINE' %}✅{% elseif task.statut == 'ABANDON' %}❌{% elseif task.statut == 'EN_RETARD' %}⚠️{% else %}📦{% endif %}
+                                    {{ task.statut|replace({'_': ' '})|title }}
+                                </span>
+                            </div>
+
+                            <div class="task-content">
+                                {% if task.description %}
+                                    <div class="task-description">{{ task.description|slice(0, 100) }}{% if task.description|length > 100 %}...{% endif %}</div>
+                                {% endif %}
+
+                                <div class="task-details">
+                                    <div class="detail-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/>
+                                        </svg>
+                                        <span>Priorité: <strong>{{ task.priorite|default('MOYENNE')|title }}</strong></span>
+                                        <span class="archived-badge">ARCHIVÉE</span>
+                                    </div>
+                                    {% if task.dateDebut %}
+                                        <div class="detail-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                            </svg>
+                                            <span>Début: <strong>{{ task.dateDebut|date('d/m/Y') }}</strong></span>
+                                        </div>
+                                    {% endif %}
+                                    {% if task.dateEcheance %}
+                                        <div class="detail-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                            </svg>
+                                            <span>Échéance: <strong>{{ task.dateEcheance|date('d/m/Y') }}</strong></span>
+                                        </div>
+                                    {% endif %}
+                                    <div class="detail-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/>
+                                        </svg>
+                                        <span>Statut final:
+                                            <strong style="color: {% if task.statut == 'TERMINE' %}#059669{% elseif task.statut == 'ABANDON' %}#b91c1c{% else %}#6b7280{% endif %};">
+                                                {{ task.statut|replace({'_': ' '})|title }}
+                                            </strong>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="task-tags">
+                                    <span class="task-tag tag-{{ task.type|default('personnel')|lower }}">
+                                        {{ task.type|default('Personnel')|upper }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="task-footer">
+                                <div class="task-actions">
+                                    <a href="{{ path('app_task_show', {'id': task.id}) }}" class="action-btn primary" style="background: #6b7280; border-color: #6b7280;">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/>
+                                        </svg>
+                                        Voir détails
+                                    </a>
+                                </div>
+                                <span class="task-date">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    {{ (task.updatedAt ?? task.createdAt)|date('d/m/Y') }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {# Empty state #}
+                {% if (activeTasks|default([])|length == 0) and (archivedTasks|default([])|length == 0) %}
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        {% if searchQuery or filterType or filterPriorite %}
+                            <h3>Aucune tâche ne correspond à votre recherche</h3>
+                            <p>Essayez d'autres critères ou <a href="{{ path('app_my_tasks') }}" style="color: var(--primary);">réinitialisez les filtres</a></p>
+                        {% else %}
+                            <h3>Aucune tâche pour le moment</h3>
+                            <p>Créez votre première tâche pour commencer à organiser votre travail</p>
+                            <a href="{{ path('app_task_add') }}" class="btn" style="margin-top: 1rem; display: inline-flex;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                                Créer une tâche
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>ESPRIT Assistant Étudiant • © {{ "now"|date("Y") }} • Tous droits réservés</p>
+        </footer>
+    </main>
+</div>
+
+<!-- Modal Insights -->
+<div id="insightsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12v-2a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5v2"/>
+                    <path d="M3 12h4l2 3 3-6 2 3 3-3 2 3 2-3"/>
+                    <path d="M3 12v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/>
+                </svg>
+                Analyse & Insights
+            </h2>
+            <button id="closeInsights">✕</button>
+        </div>
+        <div class="modal-body" id="insightsContainer"></div>
+    </div>
+</div>
+
+<div id="blur-overlay" style="position: fixed; top:0;left:0;width:100%;height:100%;backdrop-filter:blur(3px);background:rgba(255,255,255,0.1);z-index:9998;display:none;"></div>
+<div id="notif-dropdown" class="dropdown hidden">
+    <ul id="notif-list"></ul>
+</div>
+<div id="toast-message" style="position:fixed;bottom:20px;right:20px;background:#333;color:white;padding:10px 20px;border-radius:8px;opacity:0;transition:opacity 0.3s;z-index:10000;"></div>
+
+<!-- Weather Modal -->
+<div id="weatherModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:10001;justify-content:center;align-items:center;">
+    <div class="modal-content" style="max-width:700px">
+        <div class="modal-header" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">
+            <h2>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2v4M12 22v-4M4 12H2M22 12h-2"/>
+                </svg>
+                Conseil Météo IA
+            </h2>
+            <button id="closeWeatherModal" style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(255,255,255,0.2);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:1.2rem;">✕</button>
+        </div>
+        <div class="modal-body" id="weatherResult" style="min-height:200px;">
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;">
+                <div style="width:48px;height:48px;border:3px solid #f3f4f6;border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem;"></div>
+                <p style="color:var(--gray-600);">Chargement des données météo...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast-message');
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        toast.style.background = type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#333');
+        setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('notif-icon')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            const dropdown = document.getElementById('notif-dropdown');
+            const overlay  = document.getElementById('blur-overlay');
+            dropdown.classList.toggle('hidden');
+            overlay.style.display = dropdown.classList.contains('hidden') ? 'none' : 'block';
+            if (!dropdown.classList.contains('hidden')) {
+                fetchNotifications();
+                positionDropdown(dropdown, this);
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notif-dropdown');
+            const icon     = document.getElementById('notif-icon');
+            const overlay  = document.getElementById('blur-overlay');
+            if (dropdown && icon && !dropdown.contains(e.target) && !icon.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                overlay.style.display = 'none';
+            }
+        });
+
+        initializeCharts();
+        initWeatherModal();
+    });
+
+    function positionDropdown(dropdown, icon) {
+        const rect = icon.getBoundingClientRect();
+        const w    = dropdown.offsetWidth;
+        let left   = rect.right - w;
+        let top    = rect.bottom + 5;
+        if (left < 10) left = 10;
+        if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
+        if (top + dropdown.offsetHeight > window.innerHeight - 10) top = rect.top - dropdown.offsetHeight - 5;
+        dropdown.style.top  = top + 'px';
+        dropdown.style.left = left + 'px';
+    }
+
+    function fetchNotifications() {
+        fetch('{{ path("notifications_fetch") }}')
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('notif-list');
+                list.innerHTML = '';
+                let unread = 0;
+                if (!data.length) {
+                    list.innerHTML = '<li style="text-align:center;padding:2rem;color:#6b7280;font-style:italic;cursor:default;">Aucune notification</li>';
+                    document.getElementById('notif-count').textContent = '0';
+                    return;
+                }
+                data.forEach(n => {
+                    if (!n.isRead) unread++;
+                    const li = document.createElement('li');
+                    li.style.cssText = 'padding:1rem;border-bottom:1px solid #e5e7eb;cursor:pointer;transition:background-color 0.2s;';
+                    li.style.backgroundColor = n.isRead ? '#fff' : '#fee2e2';
+                    li.dataset.id = n.id;
+                    let btns = '';
+                    if (n.type === 'WARNING' && n.taskId) {
+                        btns = `<form method="post" action="/tache/${n.taskId}/action-user" style="display:flex;gap:5px;margin-top:8px;" onClick="event.stopPropagation();">
+                            <button type="submit" name="action" value="TERMINE" class="notif-action-btn finish">✔ Terminer</button>
+                            <button type="submit" name="action" value="ABANDON" class="notif-action-btn abandon" onclick="return confirm('Abandonner ?');">✖ Abandonner</button>
+                        </form>`;
+                    }
+                    li.innerHTML = `<div style="display:flex;flex-direction:column;gap:0.4rem;">
+                        <div style="font-weight:${n.isRead ? 400 : 600};">${n.message}</div>
+                        <div style="font-size:0.7rem;color:#6b7280;">🕐 ${n.createdAt} ${!n.isRead ? '<span class="new-badge">Nouveau</span>' : ''}</div>
+                        ${btns}
+                    </div>`;
+                    li.addEventListener('click', function(e) {
+                        if (e.target.tagName === 'BUTTON') return;
+                        if (!n.isRead) markAsRead(n.id, this);
+                    });
+                    list.appendChild(li);
+                });
+                document.getElementById('notif-count').textContent = unread;
+            })
+            .catch(() => {
+                document.getElementById('notif-list').innerHTML = '<li style="color:#dc2626;padding:1rem;text-align:center;">Erreur de chargement</li>';
+            });
+    }
+
+    function markAsRead(id, el) {
+        fetch('{{ path("notifications_mark_read", {"id": "ID_PLACEHOLDER"}) }}'.replace('ID_PLACEHOLDER', id), {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/json' }
+        }).then(r => r.json()).then(d => {
+            if (d.success) {
+                const c = parseInt(document.getElementById('notif-count').textContent);
+                document.getElementById('notif-count').textContent = Math.max(0, c - 1);
+                if (el) el.style.backgroundColor = '#fff';
+            }
+        });
+    }
+
+    setInterval(() => {
+        const d = document.getElementById('notif-dropdown');
+        if (d && !d.classList.contains('hidden')) fetchNotifications();
+    }, 30000);
+
+    function initializeCharts() {
+        const inProgress  = {{ stats.counts.inProgress|default(0) }};
+        const completed   = {{ stats.counts.completed|default(0) }};
+        const abandoned   = {{ stats.counts.abandoned|default(0) }};
+        const overdue     = {{ stats.counts.overdue|default(0) }};
+        const paused      = {{ stats.counts.paused|default(0) }};
+        const total       = {{ stats.counts.total|default(0) }};
+        const highP       = {{ stats.counts.highPriority|default(0) }};
+        const todo        = Math.max(0, total - inProgress - completed - abandoned - overdue - paused);
+        const remaining   = Math.max(0, total - highP);
+        const mediumP     = Math.floor(remaining * 0.6);
+        const lowP        = remaining - mediumP;
+
+        const statusCtx = document.getElementById('statusChart')?.getContext('2d');
+        if (statusCtx) {
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['À faire','En cours','Terminées','Abandonnées','En retard','En pause'],
+                    datasets: [{ data: [todo,inProgress,completed,abandoned,overdue,paused],
+                        backgroundColor: ['#f59e0b','#3b82f6','#10b981','#ef4444','#d97706','#6b7280'], borderWidth: 0 }]
+                },
+                options: { responsive: true, maintainAspectRatio: true, cutout: '60%',
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } } } }
+            });
+        }
+
+        const priorityCtx = document.getElementById('priorityChart')?.getContext('2d');
+        if (priorityCtx) {
+            new Chart(priorityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Haute','Moyenne','Basse'],
+                    datasets: [{ label: 'Nombre de tâches', data: [highP,mediumP,lowP],
+                        backgroundColor: ['#ef4444','#f59e0b','#10b981'], borderRadius: 6 }]
+                },
+                options: { responsive: true, maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } }
+            });
+        }
+
+        const progressCtx = document.getElementById('progressChart')?.getContext('2d');
+        if (progressCtx) {
+            const progressLabels    = {{ progressLabels|json_encode|raw }};
+            const progressCreated   = {{ progressCreated|json_encode|raw }};
+            const progressCompleted = {{ progressCompleted|json_encode|raw }};
+            const progressAbandoned = {{ progressAbandoned|json_encode|raw }};
+            new Chart(progressCtx, {
+                type: 'line',
+                data: {
+                    labels: progressLabels,
+                    datasets: [
+                        { label:'Tâches créées',    data:progressCreated,   borderColor:'#3b82f6', backgroundColor:'#3b82f620', tension:0.4, fill:true, pointBackgroundColor:'#3b82f6', pointBorderColor:'white', pointRadius:4 },
+                        { label:'Tâches terminées', data:progressCompleted, borderColor:'#10b981', backgroundColor:'#10b98120', tension:0.4, fill:true, pointBackgroundColor:'#10b981', pointBorderColor:'white', pointRadius:4 },
+                        { label:'Abandonnées',      data:progressAbandoned, borderColor:'#ef4444', backgroundColor:'#ef444420', tension:0.4, fill:true, pointBackgroundColor:'#ef4444', pointBorderColor:'white', pointRadius:4 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: true,
+                    interaction: { mode:'index', intersect:false },
+                    plugins: { legend: { position:'top' } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }, x: { grid: { display: false }, ticks: { maxRotation: 45 } } }
+                }
+            });
+        }
+    }
+
+    function initWeatherModal() {
+        const btn    = document.getElementById('weatherBtn');
+        const modal  = document.getElementById('weatherModal');
+        const close  = document.getElementById('closeWeatherModal');
+        const result = document.getElementById('weatherResult');
+        if (!btn) return;
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            result.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;padding:2rem;"><div style="width:48px;height:48px;border:3px solid #f3f4f6;border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem;"></div><p>Chargement...</p></div>';
+            modal.style.display = 'flex';
+            try {
+                const data = await fetch('{{ path("weather_ai") }}').then(r => r.json());
+                result.innerHTML = `<div style="display:flex;flex-direction:column;gap:1.5rem;">
+                    <div style="background:linear-gradient(135deg,#f0f9ff,#e6f2fc);padding:1.5rem;border-radius:16px;border-left:4px solid #3b82f6;">
+                        <h3 style="font-size:1.2rem;color:#1e3a8a;margin-bottom:1rem;">Météo Actuelle – ${data.weather.description||''}</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                            <div style="background:white;padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:2rem;font-weight:800;color:#1e3a8a;">${data.weather.temperature||'--'}°C</div><div style="font-size:0.8rem;color:#6b7280;">Température</div></div>
+                            <div style="background:white;padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#1e3a8a;">${data.weather.humidity||'--'}%</div><div style="font-size:0.8rem;color:#6b7280;">Humidité</div></div>
+                        </div>
+                    </div>
+                    <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border-left:4px solid #8b5cf6;">
+                        <h3 style="font-size:1.1rem;color:#4c1d95;margin-bottom:0.75rem;">💡 Conseil IA Personnalisé</h3>
+                        <p style="color:#374151;line-height:1.6;">${data.ai||'Aucun conseil disponible.'}</p>
+                    </div>
+                </div>`;
+            } catch(err) {
+                result.innerHTML = '<div style="background:#fee2e2;padding:2rem;border-radius:12px;text-align:center;"><h3 style="color:#b91c1c;">Erreur de chargement</h3><p style="color:#7f1d1d;">Impossible de récupérer les données météo.</p></div>';
+            }
+        });
+        close?.addEventListener('click', () => { modal.style.display = 'none'; });
+        modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.style.display = 'none'; });
+    }
+
+    // Insights Modal
+    const btnInsights       = document.getElementById('btnInsights');
+    const insightsModal     = document.getElementById('insightsModal');
+    const closeBtn          = document.getElementById('closeInsights');
+    const insightsContainer = document.getElementById('insightsContainer');
+
+    const total      = {{ totalTasks|default(0) }};
+    const completed  = {{ completedTasks|default(0) }};
+    const abandoned  = {{ abandonedTasks|default(0) }};
+    const inProgress = {{ inProgressTasks|default(0) }};
+    const overdue    = {{ overdueTasks|default(0) }};
+    const high       = {{ highPriorityTasks|default(0) }};
+    const successRate   = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const productivity  = (completed + abandoned + overdue) > 0 ? Math.round((completed / (completed + abandoned + overdue)) * 100) : 100;
+
+    if (btnInsights) {
+        btnInsights.addEventListener('click', async (e) => {
+            e.preventDefault();
+            insightsContainer.innerHTML = '<div style="padding:2rem;text-align:center;"><div style="width:32px;height:32px;border:2px solid #fee2e2;border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;"></div><p>Chargement des insights...</p></div>';
+            insightsModal.style.display = 'flex';
+            try {
+                const data = await fetch('{{ path("user_tasks_insights") }}').then(r => r.json());
+                insightsContainer.innerHTML = `<div style="display:flex;flex-direction:column;gap:2rem;">
+                    <div style="background:linear-gradient(135deg,#f8fafc,#f1f5f9);padding:1.5rem;border-radius:12px;border-left:4px solid var(--primary);">
+                        <h3 style="font-size:1.1rem;font-weight:600;margin-bottom:0.75rem;">📅 Résumé de la semaine</h3>
+                        <p style="color:var(--gray-700);">${data.aiInsights?.weeklyProductivitySummary||'Aucune donnée disponible.'}</p>
+                    </div>
+                    <div style="background:white;padding:1.5rem;border-radius:12px;border:1px solid var(--gray-200);">
+                        <h3 style="font-size:1.1rem;font-weight:600;margin-bottom:0.75rem;">💡 Conseils personnalisés</h3>
+                        <p style="color:var(--gray-700);">${data.aiInsights?.behavioralAdvice||'Continuez votre bon travail !'}</p>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+                        <div style="background:var(--gray-50);padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:0.5rem;">Productivité</div><div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${productivity}%</div></div>
+                        <div style="background:var(--gray-50);padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:0.5rem;">Complétées</div><div style="font-size:1.5rem;font-weight:700;color:var(--success);">${completed}</div></div>
+                        <div style="background:var(--gray-50);padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:0.5rem;">Taux réussite</div><div style="font-size:1.5rem;font-weight:700;color:var(--warning);">${successRate}%</div></div>
+                    </div>
+                </div>`;
+            } catch(err) {
+                insightsContainer.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+                    <div style="background:var(--gray-50);padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:0.8rem;color:var(--gray-500);">Productivité</div><div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${productivity}%</div></div>
+                    <div style="background:var(--gray-50);padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:0.8rem;color:var(--gray-500);">Complétées</div><div style="font-size:1.5rem;font-weight:700;color:var(--success);">${completed}</div></div>
+                    <div style="background:var(--gray-50);padding:1rem;border-radius:12px;text-align:center;"><div style="font-size:0.8rem;color:var(--gray-500);">Taux réussite</div><div style="font-size:1.5rem;font-weight:700;color:var(--warning);">${successRate}%</div></div>
+                </div>`;
+            }
+        });
+    }
+
+    closeBtn?.addEventListener('click', () => { insightsModal.style.display = 'none'; });
+    insightsModal?.addEventListener('click', e => { if (e.target === insightsModal) insightsModal.style.display = 'none'; });
+</script>
+</body>
+</html>
